@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MuSkyFlo {
+public struct MuHand {
 
     public static let bundle = Bundle.module
 
