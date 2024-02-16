@@ -4,28 +4,28 @@ import UIKit
 import ARKit
 import simd // distance
 
-public protocol TouchHandPhase {
+public protocol TouchHandDelegate {
     func begin(_ touchHand: TouchHand)
     func update(_ touchHand: TouchHand)
 }
 
 public class TouchHand {
 
-    var delegate: TouchHandPhase
-    var hand: HandAnchor.Chirality
+    private var delegate: TouchHandDelegate
+    private var hand: HandAnchor.Chirality
 
-    var phase = UITouch.Phase.ended
-    var pos   = SIMD3<Float>.zero
-    var time = TimeInterval.zero
-    var hash: Int { hand.hashValue }
+    public var phase = UITouch.Phase.ended
+    public var pos   = SIMD3<Float>.zero
+    public var time = TimeInterval.zero
+    public var hash: Int { hand.hashValue }
 
-    public init(_ delegate: TouchHandPhase,
+    public init(_ delegate: TouchHandDelegate,
                 _ hand: HandAnchor.Chirality) {
 
         self.delegate = delegate
         self.hand = hand
-
     }
+
     public func touching(_ touching: Bool, _ pos: SIMD3<Float>) {
         switch (phase, touching) {
 

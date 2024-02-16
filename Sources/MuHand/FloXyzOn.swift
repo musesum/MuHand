@@ -5,11 +5,11 @@
 import MuFlo
 import MuExtensions
 
-class FloXyzOn {
+public class FloXyzOn {
 
     var flo˚ : Flo?
-    var xyz˚ : Flo? ; var xyz = SIMD3<Float>.zero
-    var on˚  : Flo? ; var on = false
+    var xyz˚ : Flo? ; public var xyz = SIMD3<Float>.zero
+    var on˚  : Flo? ; public var on = false
 
     func parse(_ hand˚: Flo, _ joint: HandJoints) {
 

@@ -8,8 +8,8 @@ public class HandsFlo {
     private var root    : Flo?
     private var archive : FloArchive?
 
-    var leftHand = HandFlo()
-    var rightHand = HandFlo()
+    public var leftHand = HandFlo()
+    public var rightHand = HandFlo()
 
     public init() {}
 

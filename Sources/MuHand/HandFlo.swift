@@ -6,7 +6,7 @@ import MuExtensions
 public class HandFlo {
     /// each `Flo` joint has an `xyz` and `on`  value
 
-    var time = TimeInterval.zero
+    public var time = TimeInterval.zero
 
     private var thumbKnuc  = FloXyzOn()
     private var thumbBase  = FloXyzOn()
@@ -33,7 +33,7 @@ public class HandFlo {
     private var littleNter = FloXyzOn()
     private var littleTip  = FloXyzOn()
 
-    var joints = [HandJoints: FloXyzOn]()
+    public var joints = [HandJoints: FloXyzOn]()
 
     init() {
 
