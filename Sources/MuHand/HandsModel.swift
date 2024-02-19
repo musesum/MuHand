@@ -17,7 +17,7 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
     let handDelebate: TouchHandDelegate
     let session = ARKitSession()
     var handTracking = HandTrackingProvider()
-    public let handsFlo = HandsFlo()
+    public let handsFlo = MuHandsFlo()
 
     //TODO: refactor this as a protocol
     var thumbMiddle: TouchThumbMiddle?

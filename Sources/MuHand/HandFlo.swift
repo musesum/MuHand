@@ -1,80 +1,57 @@
 // created by musesum on 1/22/24
+
 #if os(visionOS)
+
 import MuFlo
 import ARKit
 import MuExtensions
+
 public class HandFlo {
-    /// each `Flo` joint has an `xyz` and `on`  value
-
+    
     public var time = TimeInterval.zero
-
-    private var thumbKnuc  = FloXyzOn()
-    private var thumbBase  = FloXyzOn()
-    private var thumbNter  = FloXyzOn()
-    private var thumbTip   = FloXyzOn()
-    private var indexMeta  = FloXyzOn()
-    private var indexKnuc  = FloXyzOn()
-    private var indexBase  = FloXyzOn()
-    private var indexNter  = FloXyzOn()
-    private var indexTip   = FloXyzOn()
-    private var middleMeta = FloXyzOn()
-    private var middleKnuc = FloXyzOn()
-    private var middleBase = FloXyzOn()
-    private var middleNter = FloXyzOn()
-    private var middleTip  = FloXyzOn()
-    private var ringMeta   = FloXyzOn()
-    private var ringKnuc   = FloXyzOn()
-    private var ringBase   = FloXyzOn()
-    private var ringNter   = FloXyzOn()
-    private var ringTip    = FloXyzOn()
-    private var littleMeta = FloXyzOn()
-    private var littleKnuc = FloXyzOn()
-    private var littleBase = FloXyzOn()
-    private var littleNter = FloXyzOn()
-    private var littleTip  = FloXyzOn()
-
-    public var joints = [HandJoints: FloXyzOn]()
+    public var jointItems  = [Joint: JointItem]()
 
     init() {
 
-        joints = [
-
-            .thumbKnuc  : thumbKnuc  ,
-            .thumbBase  : thumbBase  ,
-            .thumbNter  : thumbNter  ,
-            .thumbTip   : thumbTip   ,
-            .indexMeta  : indexMeta  ,
-            .indexKnuc  : indexKnuc  ,
-            .indexBase  : indexBase  ,
-            .indexNter  : indexNter  ,
-            .indexTip   : indexTip   ,
-            .middleMeta : middleMeta ,
-            .middleKnuc : middleKnuc ,
-            .middleBase : middleBase ,
-            .middleNter : middleNter ,
-            .middleTip  : middleTip  ,
-            .ringMeta   : ringMeta   ,
-            .ringKnuc   : ringKnuc   ,
-            .ringBase   : ringBase   ,
-            .ringNter   : ringNter   ,
-            .ringTip    : ringTip    ,
-            .littleMeta : littleMeta ,
-            .littleKnuc : littleKnuc ,
-            .littleBase : littleBase ,
-            .littleNter : littleNter ,
-            .littleTip  : littleTip  ,
+        jointItems = [
+            .thumbKnuckle   : JointItem() ,
+            .thumbBase      : JointItem() ,
+            .thumbInter     : JointItem() ,
+            .thumbTip       : JointItem() ,
+            .indexMetacar   : JointItem() ,
+            .indexKnuckle   : JointItem() ,
+            .indexBase      : JointItem() ,
+            .indexInter     : JointItem() ,
+            .indexTip       : JointItem() ,
+            .middleMetacar  : JointItem() ,
+            .middleKnuckle  : JointItem() ,
+            .middleBase     : JointItem() ,
+            .middleInter    : JointItem() ,
+            .middleTip      : JointItem() ,
+            .ringMetacar    : JointItem() ,
+            .ringKnuckle    : JointItem() ,
+            .ringBase       : JointItem() ,
+            .ringInter      : JointItem() ,
+            .ringTip        : JointItem() ,
+            .littleMetacar  : JointItem() ,
+            .littleKnuckle  : JointItem() ,
+            .littleBase     : JointItem() ,
+            .littleInter    : JointItem() ,
+            .littleTip      : JointItem() ,
         ]
     }
-    public func parseHand(_ flo: Flo) {
-        for (floJoint, floPos) in joints {
-            floPos.parse(flo, floJoint)
+    public func parseHand(_ hand˚: Flo) {
+
+        let flo = hand˚.bind("joint")
+        for (key, value) in self.jointItems {
+            value.parse(flo, key)
         }
     }
 
-    public func setJoints(_ handJoints: [HandJoints], on: Bool) {
-        for handJoint in handJoints {
-            if let xyzOn = joints[handJoint] {
-                xyzOn.on = on
+    public func trackJoints(_ trackJoints: [Joint], on: Bool) {
+        for trackJoint in trackJoints {
+            if let jointItem = jointItems[trackJoint] {
+                jointItem.on = on
             }
         }
     }
@@ -87,12 +64,12 @@ public class HandFlo {
 
         var newUpdate = false
 
-        for (handJoint, xyzOn) in joints {
-            if xyzOn.on,
-               let arName = handJoint.arJoint {
+        for (joint, item) in jointItems {
+            if item.on,
+               let arName = joint.arJoint {
 
-                let joint = skeleton.joint(arName)
-                xyzOn.xyz = matrix_multiply(transform, joint.anchorFromJointTransform).columns.3.xyz
+                let jointItems = skeleton.joint(arName)
+                item.xyz = matrix_multiply(transform, jointItems.anchorFromJointTransform).columns.3.xyz
                 newUpdate = true
             }
         }
@@ -101,16 +78,16 @@ public class HandFlo {
         }
         MuLog.NoLog("HandFlo", interval: 1.0) {
             var msg = ""
-            for (handJoint, xyzOn) in self.joints {
-                if xyzOn.on {
-                    msg += handJoint.rawValue + xyzOn.xyz.script + " "
+            for (joint, item) in self.jointItems {
+                if item.on {
+                    msg += joint.rawValue + item.xyz.script + " "
                 }
             }
             if !msg.isEmpty {
                 print("🖐️" + msg)
             }
         }
-        func err(_ msg: String) { print("HandJoints::update err: \(msg)") }
+        func err(_ msg: String) { print("HandPos::update err: \(msg)") }
     }
 
 }
