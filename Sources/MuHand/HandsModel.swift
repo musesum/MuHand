@@ -5,14 +5,9 @@
 import ARKit
 import MuExtensions
 
-public class HandsUpdate {
-    var left: HandAnchor?
-    var right: HandAnchor?
-}
-
 open class HandsModel: ObservableObject, @unchecked Sendable {
 
-    @Published var handsUpdate = HandsUpdate()
+    @Published var updated: Bool = false
 
     let handDelebate: TouchHandDelegate
     let session = ARKitSession()
@@ -40,17 +35,13 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
 
     public func publishHandTrackingUpdates() async {
 
-        for await update in handTracking.anchorUpdates {
+        for await handUpdate in handTracking.anchorUpdates {
 
-            if update.event == .updated,
-               update.anchor.isTracked {
+            if handUpdate.event == .updated,
+               handUpdate.anchor.isTracked {
 
-                handsFlo.updateHand(update.anchor.chirality, update.anchor)
-
-                switch update.anchor.chirality {
-                case .left  : handsUpdate.left  = update.anchor
-                case .right : handsUpdate.right = update.anchor
-                }
+                handsFlo.updateHand(handUpdate.anchor.chirality, handUpdate.anchor)
+                updated = true
             }
             thumbMiddle?.updateTouch()
         }

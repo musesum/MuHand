@@ -1,4 +1,4 @@
-_menu  {
+_handsMenu  {
     left            (svg "icon.left.hand") {
         thumb       (svg "icon.left.thumb") {
             kunckle (svg "icon.left.thumb.kunckle")

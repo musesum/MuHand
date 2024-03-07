@@ -5,8 +5,8 @@ import ARKit
 import simd // distance
 
 public protocol TouchHandDelegate {
-    func begin(_ touchHand: TouchHand)
-    func update(_ touchHand: TouchHand)
+    func handBegin(_ touchHand: TouchHand)
+    func handUpdate(_ touchHand: TouchHand)
 }
 
 public class TouchHand {
@@ -33,21 +33,21 @@ public class TouchHand {
 
             self.phase = .began
             self.pos = pos
-            delegate.begin(self)
+            delegate.handBegin(self)
 
         case (.began, true),
             (.moved, true):
 
             self.phase = .moved
             self.pos = pos
-            delegate.update(self)
+            delegate.handUpdate(self)
 
         case (.moved, false),
             (.began, false): // tap?
 
             self.phase = .ended
             self.pos = pos
-            delegate.update(self)
+            delegate.handUpdate(self)
 
         default: return //
 

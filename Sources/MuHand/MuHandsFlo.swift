@@ -6,30 +6,21 @@ import ARKit
 public class MuHandsFlo {
 
     public static let shared = MuHandsFlo()
-    public let root = Flo("√")
     private var archive : FloArchive?
 
     public var handFlo: [HandAnchor.Chirality: HandFlo] = [.left: HandFlo(),
                                                            .right: HandFlo()]
 
-    public var leftHand = HandFlo()
-    public var rightHand = HandFlo()
-    
-    private var scriptNames = ["corner", "hands", "menu"]
+    private var scriptNames = ["hands"] 
 
-    public init() {
-        parseScriptFiles()
-    }
+    public init() {}
 
-    func parseScriptFiles() {
-        for name in scriptNames {
-            MuMenuHands.parseFlo(root, name)
-        }
-    }
     public func parseRoot(_ root: Flo,
                           _ archive: FloArchive) {
-
-        let hand = root.bind("hand")
+        for name in scriptNames {
+            MuHand.parseFlo(root, name)
+        }
+        let hand = root.bind("hands")
         handFlo[.left]?.parseHand( hand.bind("left"))
         handFlo[.right]?.parseHand( hand.bind("right"))
         //???? print(hand.scriptFull)

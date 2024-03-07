@@ -11,7 +11,7 @@ open class TouchThumbMiddle {
     var touchLeft: TouchHand
     var touchRight: TouchHand
     var touchPhase: TouchHandDelegate
-    var touchTheshold = Float(0.3)
+    var touchTheshold = Float(0.02)
 
 
     public init(_ touchPhase: TouchHandDelegate,
@@ -21,8 +21,8 @@ open class TouchThumbMiddle {
         self.touchLeft = TouchHand(touchPhase, .left)
         self.touchRight = TouchHand(touchPhase, .right)
 
-        self.leftHand = handsFlo.leftHand
-        self.rightHand = handsFlo.rightHand
+        self.leftHand = handsFlo.handFlo[.left]!
+        self.rightHand = handsFlo.handFlo[.right]!
         leftHand.trackJoints([.thumbTip, .middleTip], on: true)
         rightHand.trackJoints([.thumbTip, .middleTip], on: true)
     }

@@ -76,11 +76,11 @@ public class HandFlo {
         if newUpdate {
             time = Date().timeIntervalSince1970
         }
-        MuLog.NoLog("HandFlo", interval: 1.0) {
+        MuLog.Log("HandFlo", interval: 2.0, terminator: " ") {
             var msg = ""
             for (joint, item) in self.jointItems {
                 if item.on {
-                    msg += joint.rawValue + item.xyz.script + " "
+                    msg += joint.rawValue + item.xyz.script(-2) + " "
                 }
             }
             if !msg.isEmpty {
