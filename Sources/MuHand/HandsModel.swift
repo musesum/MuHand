@@ -9,7 +9,7 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
 
     @Published var updated: Bool = false
 
-    let handDelebate: TouchHandDelegate
+    let handDelebate: TouchHandState
     let session = ARKitSession()
     var handTracking = HandTrackingProvider()
     public let handsFlo = MuHandsFlo()
@@ -17,7 +17,7 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
     //TODO: refactor this as a protocol
     var thumbMiddle: TouchThumbMiddle?
 
-    public init(_ handDelegate: TouchHandDelegate) {
+    public init(_ handDelegate: TouchHandState) {
         self.handDelebate = handDelegate
     }
     public func start() async {

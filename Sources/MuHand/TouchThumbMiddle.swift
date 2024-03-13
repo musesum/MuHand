@@ -1,63 +1,66 @@
 // created by musesum on 1/22/24
-#if os(visionOS)
+
 import ARKit
+
+class LeftRight<T> {
+    var left: T
+    var right: T
+    init(_ left: T, _ right: T) {
+        self.left = left
+        self.right = right
+    }
+}
 
 open class TouchThumbMiddle {
 
-    var leftHand: HandFlo
-    var rightHand: HandFlo
-    var timeLeft = TimeInterval.zero
-    var timeRight = TimeInterval.zero
-    var touchLeft: TouchHand
-    var touchRight: TouchHand
-    var touchPhase: TouchHandDelegate
+    var handFlo: LeftRight<HandFlo>
+    var handTime: LeftRight<TimeInterval>
+    var handTouch: LeftRight<TouchHand>
+
+    var handProto: TouchHandState
     var touchTheshold = Float(0.02)
 
-
-    public init(_ touchPhase: TouchHandDelegate,
+    public init(_ handState: TouchHandState,
                 _ handsFlo: MuHandsFlo) {
 
-        self.touchPhase = touchPhase
-        self.touchLeft = TouchHand(touchPhase, .left)
-        self.touchRight = TouchHand(touchPhase, .right)
+        handFlo   = LeftRight(handsFlo.handFlo[.left]!,
+                              handsFlo.handFlo[.right]!)
 
-        self.leftHand = handsFlo.handFlo[.left]!
-        self.rightHand = handsFlo.handFlo[.right]!
-        leftHand.trackJoints([.thumbTip, .middleTip], on: true)
-        rightHand.trackJoints([.thumbTip, .middleTip], on: true)
+        handTime  = LeftRight(.zero, .zero)
+
+        handTouch = LeftRight(TouchHand(handState, .left),
+                              TouchHand(handState, .right))
+
+        self.handProto = handState
+
+        handFlo.left.trackJoints([.thumbTip, .middleTip], on: true)
+        handFlo.right.trackJoints([.thumbTip, .middleTip], on: true)
     }
 
     public func updateTouch() {
 
-        if touchLeft.time < leftHand.time {
-            touchLeft.time = leftHand.time
-            if let thumbTip = leftHand.jointItems[.thumbTip]?.xyz,
-               let middleTip = leftHand.jointItems[.middleTip]?.xyz {
-                let tipsDistance = distance(thumbTip, middleTip)
-                if tipsDistance < touchTheshold {
-                    touchLeft.touching(true, middleTip)
-                } else {
-                    touchLeft.touching(false, middleTip)
-                }
+        if handTouch.left.time < handFlo.left.time {
+            handTouch.left.time = handFlo.left.time
+            let tipsDistance = distance(handFlo.left.thumbTip.xyz,
+                                        handFlo.left.middleTip.xyz)
+            if tipsDistance < touchTheshold {
+                handTouch.left.touching(true, handFlo.left.middleTip.xyz)
+            } else {
+                handTouch.left.touching(false, handFlo.left.middleTip.xyz)
             }
         }
-        if touchRight.time < rightHand.time {
-            touchRight.time = rightHand.time
-            if let thumbTip = rightHand.jointItems[.thumbTip]?.xyz,
-               let middleTip = rightHand.jointItems[.middleTip]?.xyz {
-                let tipsDistance = distance(thumbTip, middleTip)
-                if tipsDistance < touchTheshold {
-                    touchRight.touching(true, middleTip)
-                    //print("🤏", terminator: " ")
-                } else {
-                    touchRight.touching(false, middleTip)
-                }
+        if handTouch.right.time < handFlo.right.time {
+            handTouch.right.time = handFlo.right.time
+            let tipsDistance = distance(handFlo.right.thumbTip.xyz, 
+                                        handFlo.right.middleTip.xyz)
+            if tipsDistance < touchTheshold {
+                handTouch.right.touching(true, handFlo.right.middleTip.xyz)
+                //print("🤏", terminator: " ")
+            } else {
+                handTouch.right.touching(false, handFlo.right.middleTip.xyz)
             }
-
         }
 
     }
 
 }
-
-#endif
