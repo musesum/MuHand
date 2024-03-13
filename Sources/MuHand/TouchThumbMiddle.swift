@@ -17,7 +17,7 @@ open class TouchThumbMiddle {
     var handTime: LeftRight<TimeInterval>
     var handTouch: LeftRight<TouchHand>
 
-    var handProto: TouchHandState
+    var handState: TouchHandState
     var touchTheshold = Float(0.02)
 
     public init(_ handState: TouchHandState,
@@ -31,7 +31,7 @@ open class TouchThumbMiddle {
         handTouch = LeftRight(TouchHand(handState, .left),
                               TouchHand(handState, .right))
 
-        self.handProto = handState
+        self.handState = handState
 
         handFlo.left.trackJoints([.thumbTip, .middleTip], on: true)
         handFlo.right.trackJoints([.thumbTip, .middleTip], on: true)
