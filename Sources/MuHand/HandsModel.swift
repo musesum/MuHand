@@ -9,23 +9,23 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
 
     @Published var updated: Bool = false
 
-    let handDelebate: TouchHandState
+    let handState: TouchHandState
     let session = ARKitSession()
     var handTracking = HandTrackingProvider()
     public let handsFlo = MuHandsFlo()
 
     //TODO: refactor this as a protocol
-    var thumbMiddle: TouchThumbMiddle?
+    var touchJoints: TouchJoints?
 
-    public init(_ handDelegate: TouchHandState) {
-        self.handDelebate = handDelegate
+    public init(_ handState: TouchHandState) {
+        self.handState = handState
     }
     public func start() async {
 
         do {
             if HandTrackingProvider.isSupported {
                 print("ARKitSession starting.")
-                thumbMiddle = TouchThumbMiddle(handDelebate, handsFlo)
+                touchJoints = TouchJoints(handState, handsFlo)
                 try await session.run([handTracking])
             }
         } catch {
@@ -43,7 +43,7 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
                 handsFlo.updateHand(handUpdate.anchor.chirality, handUpdate.anchor)
                 updated = true
             }
-            thumbMiddle?.updateTouch()
+            touchJoints?.updateTouch()
         }
     }
 

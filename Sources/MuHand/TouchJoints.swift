@@ -11,12 +11,15 @@ class LeftRight<T> {
     }
 }
 
-open class TouchThumbMiddle {
+open class TouchJoints {
 
     var handFlo: LeftRight<HandFlo>
     var handTime: LeftRight<TimeInterval>
     var handTouch: LeftRight<TouchHand>
 
+//    var thumbTouch: LeftRight<Joint?>
+//    var indexTouch: LeftRight<Joint?> // touching other hand joint
+//
     var handState: TouchHandState
     var touchTheshold = Float(0.02)
 
@@ -33,32 +36,30 @@ open class TouchThumbMiddle {
 
         self.handState = handState
 
-        handFlo.left.trackJoints([.thumbTip, .middleTip], on: true)
-        handFlo.right.trackJoints([.thumbTip, .middleTip], on: true)
+        handFlo.left.trackAllJoints(on: true)
+        handFlo.right.trackAllJoints(on: true)
     }
 
+    public func updateThumb(_ handFlo: HandFlo,
+                            _ handTouch: TouchHand) {
+        let tipsDistance = distance(handFlo.thumbTip.xyz,
+                                    handFlo.middleTip.xyz)
+        if tipsDistance < touchTheshold {
+            handTouch.touching(true, handFlo.middleTip.xyz)
+        } else {
+            handTouch.touching(false, handFlo.middleTip.xyz)
+        }
+
+    }
     public func updateTouch() {
 
         if handTouch.left.time < handFlo.left.time {
             handTouch.left.time = handFlo.left.time
-            let tipsDistance = distance(handFlo.left.thumbTip.xyz,
-                                        handFlo.left.middleTip.xyz)
-            if tipsDistance < touchTheshold {
-                handTouch.left.touching(true, handFlo.left.middleTip.xyz)
-            } else {
-                handTouch.left.touching(false, handFlo.left.middleTip.xyz)
-            }
+            updateThumb(handFlo.left, handTouch.left)
         }
         if handTouch.right.time < handFlo.right.time {
             handTouch.right.time = handFlo.right.time
-            let tipsDistance = distance(handFlo.right.thumbTip.xyz, 
-                                        handFlo.right.middleTip.xyz)
-            if tipsDistance < touchTheshold {
-                handTouch.right.touching(true, handFlo.right.middleTip.xyz)
-                //print("🤏", terminator: " ")
-            } else {
-                handTouch.right.touching(false, handFlo.right.middleTip.xyz)
-            }
+            updateThumb(handFlo.right, handTouch.right)
         }
 
     }

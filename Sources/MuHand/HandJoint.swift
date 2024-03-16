@@ -1,9 +1,8 @@
 // created by musesum on 1/20/24
 
-//#if os(visionOS)
 import ARKit
 
-public enum Joint: String {
+public enum HandJoint: String {
 
     case thumbKnuc   = "thumb.knuc"
     case thumbBase   = "thumb.base"
@@ -34,29 +33,32 @@ public enum Joint: String {
     case littleInter = "little.inter"
     case littleTip   = "little.tip"
 
+    case wrist       = "wrist"
+    case forearm     = "forearm"
+
     var arJoint: HandSkeleton.JointName? {
-        ARHandJoint[self] 
+        ARHandJoint[self]
     }
     var num: Int {
         switch self {
-           
+            
         case .thumbKnuc   : 1
         case .thumbBase   : 2
         case .thumbInter  : 3
         case .thumbTip    : 4
-
+            
         case .indexMeta   : 5
         case .indexKnuc   : 6
         case .indexBase   : 7
         case .indexInter  : 8
         case .indexTip    : 9
-
+            
         case .middleMeta  : 10
         case .middleKnuc  : 11
         case .middleBase  : 12
         case .middleInter : 13
         case .middleTip   : 14
-
+            
         case .ringMeta    : 15
         case .ringKnuc    : 16
         case .ringBase    : 17
@@ -68,37 +70,39 @@ public enum Joint: String {
         case .littleBase  : 22
         case .littleInter : 23
         case .littleTip   : 24
-
-        default: 0
+            
+        case .wrist       : 25
+        case .forearm     : 26
         }
     }
 }
 
-let ARHandJoint: [Joint: HandSkeleton.JointName] = [
-
+let ARHandJoint: [HandJoint: HandSkeleton.JointName] = [
+    
     .thumbKnuc   : .thumbKnuckle,
-    .thumbBase      : .thumbIntermediateBase,
-    .thumbInter     : .thumbIntermediateTip,
-    .thumbTip       : .thumbTip,
+    .thumbBase   : .thumbIntermediateBase,
+    .thumbInter  : .thumbIntermediateTip,
+    .thumbTip    : .thumbTip,
     .indexMeta   : .indexFingerMetacarpal,
     .indexKnuc   : .indexFingerKnuckle,
-    .indexBase      : .indexFingerIntermediateBase,
-    .indexInter     : .indexFingerIntermediateTip,
-    .indexTip       : .indexFingerTip,
+    .indexBase   : .indexFingerIntermediateBase,
+    .indexInter  : .indexFingerIntermediateTip,
+    .indexTip    : .indexFingerTip,
     .middleMeta  : .middleFingerMetacarpal,
     .middleKnuc  : .middleFingerKnuckle,
-    .middleBase     : .middleFingerIntermediateBase,
-    .middleInter    : .middleFingerIntermediateTip,
-    .middleTip      : .middleFingerTip,
+    .middleBase  : .middleFingerIntermediateBase,
+    .middleInter : .middleFingerIntermediateTip,
+    .middleTip   : .middleFingerTip,
     .ringMeta    : .ringFingerMetacarpal,
     .ringKnuc    : .ringFingerKnuckle,
-    .ringBase       : .ringFingerIntermediateBase,
-    .ringInter      : .ringFingerIntermediateTip,
-    .ringTip        : .ringFingerTip,
+    .ringBase    : .ringFingerIntermediateBase,
+    .ringInter   : .ringFingerIntermediateTip,
+    .ringTip     : .ringFingerTip,
     .littleMeta  : .littleFingerMetacarpal,
     .littleKnuc  : .littleFingerKnuckle,
-    .littleBase     : .littleFingerIntermediateBase,
-    .littleInter    : .littleFingerIntermediateTip,
-    .littleTip      : .littleFingerTip,
+    .littleBase  : .littleFingerIntermediateBase,
+    .littleInter : .littleFingerIntermediateTip,
+    .littleTip   : .littleFingerTip,
+    .wrist       : .forearmWrist, // wrist?
+    .forearm     : .forearmArm
 ]
-//#endif

@@ -7,12 +7,10 @@ public class MuHandsFlo {
 
     public static let shared = MuHandsFlo()
     private var archive : FloArchive?
+    private var scriptNames = ["hand"]
 
     public var handFlo: [HandAnchor.Chirality: HandFlo] = [.left: HandFlo(),
                                                            .right: HandFlo()]
-
-    private var scriptNames = ["hands"] 
-
     public init() {}
 
     public func parseRoot(_ root: Flo,
@@ -20,12 +18,11 @@ public class MuHandsFlo {
         for name in scriptNames {
             MuHand.parseFlo(root, name)
         }
-        let hand = root.bind("hands")
+        let hand = root.bind("hand")
         handFlo[.left]?.parseHand( hand.bind("left"))
         handFlo[.right]?.parseHand( hand.bind("right"))
-        //???? print(hand.scriptFull)
     }
-    public func setHand(_ chirality: HandAnchor.Chirality, finger: [Joint], on: Bool) {
+    public func setHand(_ chirality: HandAnchor.Chirality, finger: [HandJoint], on: Bool) {
         handFlo[chirality]?.trackJoints(finger, on: on)
     }
     public func updateHand(_ chirality: HandAnchor.Chirality, 

@@ -1,6 +1,6 @@
 // created by musesum on 1/22/24
 
-#if os(visionOS)
+
 
 import MuFlo
 import ARKit
@@ -9,34 +9,79 @@ import MuExtensions
 public class HandFlo {
 
     public var time = TimeInterval.zero
-    public var joints = [Joint: JointItem]()
-    public var fingerTips = [Joint: JointItem]()
+    public var joints = [HandJoint: JointFlo]()
+    public var touchIndex = [HandJoint: JointFlo]()
+    public var touchThumb = [HandJoint: JointFlo]()
 
+    // joints from arkit
+    var thumbKnuc   = JointFlo()
+    var thumbBase   = JointFlo()
+    var thumbInter  = JointFlo()
+    var thumbTip    = JointFlo()
+    var indexMeta   = JointFlo()
+    var indexKnuc   = JointFlo()
+    var indexBase   = JointFlo()
+    var indexInter  = JointFlo()
+    var indexTip    = JointFlo()
+    var middleMeta  = JointFlo()
+    var middleKnuc  = JointFlo()
+    var middleBase  = JointFlo()
+    var middleInter = JointFlo()
+    var middleTip   = JointFlo()
+    var ringMeta    = JointFlo()
+    var ringKnuc    = JointFlo()
+    var ringBase    = JointFlo()
+    var ringInter   = JointFlo()
+    var ringTip     = JointFlo()
+    var littleMeta  = JointFlo()
+    var littleKnuc  = JointFlo()
+    var littleBase  = JointFlo()
+    var littleInter = JointFlo()
+    var littleTip   = JointFlo()
+    var wrist       = JointFlo()
+    var forearm     = JointFlo()
 
-    var thumbKnuc   = JointItem()
-    var thumbBase   = JointItem()
-    var thumbInter  = JointItem()
-    var thumbTip    = JointItem()
-    var indexMeta   = JointItem()
-    var indexKnuc   = JointItem()
-    var indexBase   = JointItem()
-    var indexInter  = JointItem()
-    var indexTip    = JointItem()
-    var middleMeta  = JointItem()
-    var middleKnuc  = JointItem()
-    var middleBase  = JointItem()
-    var middleInter = JointItem()
-    var middleTip   = JointItem()
-    var ringMeta    = JointItem()
-    var ringKnuc    = JointItem()
-    var ringBase    = JointItem()
-    var ringInter   = JointItem()
-    var ringTip     = JointItem()
-    var littleMeta  = JointItem()
-    var littleKnuc  = JointItem()
-    var littleBase  = JointItem()
-    var littleInter = JointItem()
-    var littleTip   = JointItem()
+    // index finger touching joint of opposite hand
+    var indexThumbKnuc   = JointFlo()
+    var indexThumbBase   = JointFlo()
+    var indexThumbInter  = JointFlo()
+    var indexThumbTip    = JointFlo()
+    var indexIndexMeta   = JointFlo()
+    var indexIndexKnuc   = JointFlo()
+    var indexIndexBase   = JointFlo()
+    var indexIndexInter  = JointFlo()
+    var indexIndexTip    = JointFlo()
+    var indexMiddleMeta  = JointFlo()
+    var indexMiddleKnuc  = JointFlo()
+    var indexMiddleBase  = JointFlo()
+    var indexMiddleInter = JointFlo()
+    var indexMiddleTip   = JointFlo()
+    var indexRingMeta    = JointFlo()
+    var indexRingKnuc    = JointFlo()
+    var indexRingBase    = JointFlo()
+    var indexRingInter   = JointFlo()
+    var indexRingTip     = JointFlo()
+    var indexLittleMeta  = JointFlo()
+    var indexLittleKnuc  = JointFlo()
+    var indexLittleBase  = JointFlo()
+    var indexLittleInter = JointFlo()
+    var indexLittleTip   = JointFlo()
+    var indexWrist       = JointFlo()
+    var indexForearm     = JointFlo()
+
+    // thumb touch finger of same hand
+    var thumbIndexBase   = JointFlo()
+    var thumbIndexInter  = JointFlo()
+    var thumbIndexTip    = JointFlo()
+    var thumbMiddleBase  = JointFlo()
+    var thumbMiddleInter = JointFlo()
+    var thumbMiddleTip   = JointFlo()
+    var thumbRingBase    = JointFlo()
+    var thumbRingInter   = JointFlo()
+    var thumbRingTip     = JointFlo()
+    var thumbLittleBase  = JointFlo()
+    var thumbLittleInter = JointFlo()
+    var thumbLittleTip   = JointFlo()
 
     init() {
 
@@ -65,24 +110,75 @@ public class HandFlo {
             .littleBase  : littleBase  ,
             .littleInter : littleInter ,
             .littleTip   : littleTip   ,
+            .wrist       : wrist       ,
+            .forearm     : forearm     ,
         ]
-        fingerTips = [
-            .thumbTip  : thumbTip ,
-            .indexTip  : indexTip ,
-            .middleTip : middleTip,
-            .ringTip   : ringTip  ,
-            .littleTip : littleTip
+        touchIndex = [
+            .thumbKnuc   : indexThumbKnuc   ,
+            .thumbBase   : indexThumbBase   ,
+            .thumbInter  : indexThumbInter  ,
+            .thumbTip    : indexThumbTip    ,
+            .indexMeta   : indexIndexMeta   ,
+            .indexKnuc   : indexIndexKnuc   ,
+            .indexBase   : indexIndexBase   ,
+            .indexInter  : indexIndexInter  ,
+            .indexTip    : indexIndexTip    ,
+            .middleMeta  : indexMiddleMeta  ,
+            .middleKnuc  : indexMiddleKnuc  ,
+            .middleBase  : indexMiddleBase  ,
+            .middleInter : indexMiddleInter ,
+            .middleTip   : indexMiddleTip   ,
+            .ringMeta    : indexRingMeta    ,
+            .ringKnuc    : indexRingKnuc    ,
+            .ringBase    : indexRingBase    ,
+            .ringInter   : indexRingInter   ,
+            .ringTip     : indexRingTip     ,
+            .littleMeta  : indexLittleMeta  ,
+            .littleKnuc  : indexLittleKnuc  ,
+            .littleBase  : indexLittleBase  ,
+            .littleInter : indexLittleInter ,
+            .littleTip   : indexLittleTip   ,
+            .wrist       : indexWrist       ,
+            .forearm     : indexForearm     ,
+        ]
+        touchThumb = [
+            .indexBase   : thumbIndexBase   ,
+            .indexInter  : thumbIndexInter  ,
+            .indexTip    : thumbIndexTip    ,
+            .middleBase  : thumbMiddleBase  ,
+            .middleInter : thumbMiddleInter ,
+            .middleTip   : thumbMiddleTip   ,
+            .ringBase    : thumbRingBase    ,
+            .ringInter   : thumbRingInter   ,
+            .ringTip     : thumbRingTip     ,
+            .littleBase  : thumbLittleBase  ,
+            .littleInter : thumbLittleInter ,
+            .littleTip   : thumbLittleTip   ,
         ]
     }
     public func parseHand(_ hand˚: Flo) {
 
-        let flo = hand˚.bind("joint")
+        let handJoint = hand˚.bind("joint")
         for (key, value) in self.joints {
-            value.parse(flo, key)
+            value.parse(handJoint, key)
+        }
+        let touchThumb = hand˚.bind("touch.thumb")
+        for (key, value) in self.touchThumb {
+            value.parse(touchThumb, key)
+        }
+        let touchIndex = hand˚.bind("touch.index")
+        for (key, value) in self.touchIndex {
+            value.parse(touchIndex, key)
         }
     }
 
-    public func trackJoints(_ trackJoints: [Joint], on: Bool) {
+    public func trackAllJoints(on: Bool) {
+        for jointItem in joints.values {
+                jointItem.on = on
+        }
+    }
+
+    public func trackJoints(_ trackJoints: [HandJoint], on: Bool) {
         for trackJoint in trackJoints {
             if let jointItem = joints[trackJoint] {
                 jointItem.on = on
@@ -90,40 +186,8 @@ public class HandFlo {
         }
     }
 
-    func updateAnchor(_ anchor: HandAnchor) {
 
-        guard let skeleton = anchor.handSkeleton else { return err("skeleton") }
-
-        let transform = anchor.originFromAnchorTransform
-
-        var newUpdate = false
-
-        for (joints, item) in joints {
-            if item.on,
-               let arName = joints.arJoint {
-
-                let joints = skeleton.joint(arName)
-                item.xyz = matrix_multiply(transform, joints.anchorFromJointTransform).columns.3.xyz
-                newUpdate = true
-            }
-        }
-        if newUpdate {
-            time = Date().timeIntervalSince1970
-        }
-        MuLog.Log("HandFlo", interval: 2.0, terminator: " ") {
-            var msg = ""
-            for (joints, item) in self.joints {
-                if item.on {
-                    msg += joints.rawValue + item.xyz.script(-2) + " "
-                }
-            }
-            if !msg.isEmpty {
-                print("🖐️" + msg)
-            }
-        }
-        func err(_ msg: String) { print("HandPos::update err: \(msg)") }
-    }
 
 }
 
-#endif
+
