@@ -21,7 +21,7 @@ extension HandFlo {
                let arName = joints.arJoint {
 
                 let joints = skeleton.joint(arName)
-                item.xyz = matrix_multiply(transform, joints.anchorFromJointTransform).columns.3.xyz
+                item.pos = matrix_multiply(transform, joints.anchorFromJointTransform).columns.3.xyz
                 newUpdate = true
             }
         }
@@ -32,7 +32,7 @@ extension HandFlo {
             var msg = ""
             for (joints, item) in self.joints {
                 if item.on {
-                    msg += joints.rawValue + item.xyz.script(-2) + " "
+                    msg += joints.rawValue + item.pos.script(-2) + " "
                 }
             }
             if !msg.isEmpty {

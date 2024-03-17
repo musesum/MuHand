@@ -8,17 +8,17 @@ import MuExtensions
 public class JointFlo {
 
     var flo˚ : Flo?
-    var xyz˚ : Flo? ; public var xyz = SIMD3<Float>.zero
+    var pos˚ : Flo? ; public var pos = SIMD3<Float>.zero
     var on˚  : Flo? ; public var on = false
 
     func parse(_ hand˚: Flo, _ joint: HandJoint) {
 
         flo˚ = hand˚.bind(joint.rawValue)
-        xyz˚ = flo˚?.bind("pos") { f,_ in self.xyz = f.xyz  }
+        pos˚ = flo˚?.bind("pos") { f,_ in self.pos = f.xyz  }
         on˚  = flo˚?.bind("on")  { f,_ in self.on  = f.bool }
 
         guard let flo˚ else { return err("\(joint.rawValue)") }
-        if xyz˚ == nil      { return err("\(flo˚.name).xyz") }
+        if pos˚ == nil      { return err("\(flo˚.name).pos") }
         if on˚  == nil      { return err("\(flo˚.name).on") }
 
         func err(_ msg: String) {

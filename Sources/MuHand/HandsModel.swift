@@ -1,8 +1,7 @@
 // created by musesum on 1/18/24
 
-#if os(visionOS)
-
 import ARKit
+import MuFlo
 import MuExtensions
 
 open class HandsModel: ObservableObject, @unchecked Sendable {
@@ -12,20 +11,35 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
     let handState: TouchHandState
     let session = ARKitSession()
     var handTracking = HandTrackingProvider()
-    public let handsFlo = MuHandsFlo()
+    let handsFlo: HandsFlo
+    var handFlo: LeftRight<HandFlo>!
+    var handTime = LeftRight<TimeInterval>(.zero,.zero)
+    var handTouch: LeftRight<TouchHand>!
+    var touchTheshold = Float(0.02)
 
-    //TODO: refactor this as a protocol
-    var touchJoints: TouchJoints?
 
-    public init(_ handState: TouchHandState) {
+    public init(_ handState: TouchHandState,
+                _ handFlo: Flo,
+                _ archive: FloArchive) {
+
         self.handState = handState
+        self.handsFlo = HandsFlo()
+        handsFlo.parseRoot(handFlo, archive)
     }
     public func start() async {
 
         do {
             if HandTrackingProvider.isSupported {
                 print("ARKitSession starting.")
-                touchJoints = TouchJoints(handState, handsFlo)
+                handFlo   = LeftRight(handsFlo.handFlo[.left]!,
+                                      handsFlo.handFlo[.right]!)
+
+                handTouch = LeftRight(TouchHand(handState, .left),
+                                      TouchHand(handState, .right))
+
+                handFlo.left.trackAllJoints(on: true)
+                handFlo.right.trackAllJoints(on: true)
+
                 try await session.run([handTracking])
             }
         } catch {
@@ -33,7 +47,7 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
         }
     }
 
-    public func publishHandTrackingUpdates() async {
+    public func updateHands() async {
 
         for await handUpdate in handTracking.anchorUpdates {
 
@@ -43,10 +57,33 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
                 handsFlo.updateHand(handUpdate.anchor.chirality, handUpdate.anchor)
                 updated = true
             }
-            touchJoints?.updateTouch()
+            updateTouch()
         }
     }
 
+    func updateThumb(_ handFlo: HandFlo,
+                            _ handTouch: TouchHand) {
+        let tipsDistance = distance(handFlo.thumbTip.pos,
+                                    handFlo.middleTip.pos)
+        if tipsDistance < touchTheshold {
+            handTouch.touching(true, handFlo.middleTip.pos)
+        } else {
+            handTouch.touching(false, handFlo.middleTip.pos)
+        }
+
+    }
+    func updateTouch() {
+
+        if handTouch.left.time < handFlo.left.time {
+            handTouch.left.time = handFlo.left.time
+            updateThumb(handFlo.left, handTouch.left)
+        }
+        if handTouch.right.time < handFlo.right.time {
+            handTouch.right.time = handFlo.right.time
+            updateThumb(handFlo.right, handTouch.right)
+        }
+
+    }
     public func monitorSessionEvents() async {
         for await event in session.events {
             switch event {
@@ -60,4 +97,3 @@ open class HandsModel: ObservableObject, @unchecked Sendable {
         }
     }
 }
-#endif

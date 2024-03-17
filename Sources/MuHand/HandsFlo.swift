@@ -3,9 +3,9 @@
 import MuFlo
 import ARKit
 
-public class MuHandsFlo {
+public class HandsFlo {
 
-    public static let shared = MuHandsFlo()
+    public static let shared = HandsFlo()
     private var archive : FloArchive?
     private var scriptNames = ["hand"]
 
