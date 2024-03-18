@@ -1,8 +1,8 @@
 // created by musesum on 1/22/24
 
-import ARKit
+import Foundation
 
-class LeftRight<T> {
+open class LeftRight<T> {
     var left: T
     var right: T
     init(_ left: T, _ right: T) {

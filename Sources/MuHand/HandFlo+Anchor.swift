@@ -41,6 +41,6 @@ extension HandFlo {
         }
         func err(_ msg: String) { print("HandPos::update err: \(msg)") }
     }
-
 }
+
 #endif

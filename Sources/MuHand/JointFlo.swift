@@ -1,6 +1,5 @@
 // created by musesum on 1/20/24
 
-#if os(visionOS)
 
 import MuFlo
 import MuExtensions
@@ -26,4 +25,3 @@ public class JointFlo {
         }
     }
 }
-#endif

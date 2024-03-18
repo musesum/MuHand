@@ -36,9 +36,7 @@ public enum HandJoint: String {
     case wrist       = "wrist"
     case forearm     = "forearm"
 
-    var arJoint: HandSkeleton.JointName? {
-        ARHandJoint[self]
-    }
+
     var num: Int {
         switch self {
             
@@ -75,8 +73,13 @@ public enum HandJoint: String {
         case .forearm     : 26
         }
     }
+#if os(visionOS)
+    var arJoint: HandSkeleton.JointName? {
+        ARHandJoint[self]
+    }
+#endif
 }
-
+#if os(visionOS)
 let ARHandJoint: [HandJoint: HandSkeleton.JointName] = [
     
     .thumbKnuc   : .thumbKnuckle,
@@ -106,3 +109,4 @@ let ARHandJoint: [HandJoint: HandSkeleton.JointName] = [
     .wrist       : .forearmWrist, // wrist?
     .forearm     : .forearmArm
 ]
+#endif

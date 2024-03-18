@@ -1,7 +1,5 @@
 // created by musesum on 1/22/24
 
-
-
 import MuFlo
 import ARKit
 import MuExtensions
@@ -83,7 +81,7 @@ public class HandFlo {
     var thumbLittleInter = JointFlo()
     var thumbLittleTip   = JointFlo()
 
-    init() {
+    public init() {
 
         joints = [
             .thumbKnuc   : thumbKnuc   ,
@@ -174,7 +172,7 @@ public class HandFlo {
 
     public func trackAllJoints(on: Bool) {
         for jointItem in joints.values {
-                jointItem.on = on
+            jointItem.on = on
         }
     }
 
@@ -185,8 +183,6 @@ public class HandFlo {
             }
         }
     }
-
-
 
 }
 

@@ -1,5 +1,5 @@
 // created by musesum on 1/22/24
-#if os(visionOS)
+
 import UIKit
 import ARKit
 import simd // distance
@@ -12,18 +12,16 @@ public protocol TouchHandState {
 public class TouchHand {
 
     private var handState: TouchHandState
-    private var hand: HandAnchor.Chirality
-
+    public var chiral: Chiral
     public var phase = UITouch.Phase.ended
-    public var pos   = SIMD3<Float>.zero
+    public var pos = SIMD3<Float>.zero
     public var time = TimeInterval.zero
-    public var hash: Int { hand.hashValue }
 
     public init(_ handState: TouchHandState,
-                _ hand: HandAnchor.Chirality) {
+                _ chiral: Chiral) {
 
         self.handState = handState
-        self.hand = hand
+        self.chiral = chiral
     }
 
     public func touching(_ touching: Bool, 
@@ -56,5 +54,3 @@ public class TouchHand {
         }
     }
 }
-
-#endif
