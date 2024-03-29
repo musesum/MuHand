@@ -12,24 +12,31 @@ public protocol TouchCanvasDelegate {
 }
 
 public class JointFlo {
-    
-    let id = Visitor.nextId() //?????
+
     var flo˚: Flo?
-    var on = true  // is this tracked?
+    var on = false  // is this tracked?
     var touching = false
     var timeBegin = TimeInterval(0)
     var timeEnded = TimeInterval(0)
-    var tapThreshold = TimeInterval(0.25)
+
+    /// distance between thumb and fingerTip to register a touch
+    var touchTheshold = Float(0.015)
+
+    /// sometimes a tracker skips a joint, so
+    /// that is still within tapThreshold (false negative)
+    var touchRelease = TimeInterval(0.10)
+    var touchTimer = Timer()
+
+    var tapThreshold = TimeInterval(0.33)
 
     var chiral: Chiral!
     var joint: JointEnum!
-
-    var touchTheshold = Float(0.015)
 
     public var pos = SIMD3<Float>.zero
     public var time = TimeInterval(0)
     public var phase = UITouch.Phase.ended
 
+    /// hash should be the same between all devices during runtime
     public var hash: Int { chiral.rawValue * 1000 + joint.rawValue }
 
     func parse(_ chiral: Chiral, _ hand˚: Flo, _ joint: JointEnum) {
@@ -52,7 +59,7 @@ public class JointFlo {
         }
     }
     /// index finger tip toogles on/off
-    func updateIndexTip(_ indexTip: JointFlo) {
+    func updateIndexTip(_ indexTip: JointFlo) -> Int {
         let d = distance(indexTip.pos, pos)
         if  d < touchTheshold {
             if !touching {
@@ -66,39 +73,47 @@ public class JointFlo {
                 let timeDelta = timeEnded - timeBegin
                 if timeDelta < tapThreshold {
                     on = !on
-                    log()
+                    log(on ? "❇️" : "🅾️")
+                    return 1
                 }
             }
         }
-        func log() {
+        return 0
+        
+        func log(_ prefix: String) {
+
             let path = "\(chiral.name).\(flo˚?.path() ?? "??")".pad(18)
             let mine = path + pos.script(-2)
             let index = "indexTip\(indexTip.pos.script(-2))"
-            print("\(mine) ∆ \(index) => \(d.digits(3)) ")
+            let label = "\(prefix)\(mine) ∆ \(index) => \(d.digits(3)) "
+            MuLog.RunLog(label)
         }
     }
     /// thumb finger tip as continuos controller or brush
-    func updateThumbTip(_ thumbTip: JointFlo) {
+    func updateThumbTip(_ thumbTip: JointFlo) -> Int {
 
         let d = distance(thumbTip.pos, pos)
         if d < touchTheshold {
             switch phase {
-            case .began: updateFlo(.moved)
-            case .moved: updateFlo(.moved)
-            default:     updateFlo(.began); log()
+            case .began: updateFlo(.moved); log("🔵")
+            case .moved: updateFlo(.moved); log("🔵")
+            default:     updateFlo(.began); log("🟢")
             }
         } else {
             switch phase {
-            case .began: updateFlo(.ended)
-            case .moved: updateFlo(.ended)
-            default:     break
+            case .began: updateFlo(.ended); log("🔴")
+            case .moved: updateFlo(.ended); log("🔴")
+            default:     return 0
             }
         }
-        func log() {
+        return 1
+
+        func log(_ prefix: String) {
             let path = "\(chiral.name).\(flo˚?.path() ?? "??")".pad(18)
             let mine = path + self.pos.script(-2)
             let thumb = "thumbTip\(thumbTip.pos.script(-2))"
-            print("\(mine) ∆ \(thumb) => \(d.digits(3)) ")
+            let label = "\(prefix) \(mine) ∆ \(thumb) => \(d.digits(3)) "
+            MuLog.RunLog(label)
         }
     }
 

@@ -141,16 +141,23 @@ public class HandFlo {
     }
 
     public func updateThumbIndex(_ otherHand: HandFlo) {
-
+        var thumbCount = 0
         for jointEnum in touchThumb {
             if let jointFlo = joints[jointEnum] {
-                jointFlo.updateThumbTip(thumbTip)
+                thumbCount += jointFlo.updateThumbTip(thumbTip)
             }
         }
+        var indexCount = 0
         for jointEnum in otherHand.touchIndex {
             if let jointFlo = otherHand.joints[jointEnum] {
-                jointFlo.updateIndexTip(indexTip)
+                indexCount += jointFlo.updateIndexTip(indexTip)
             }
+        }
+        if thumbCount + indexCount > 0 {
+            var label = chiral == .left ? "✋" : "🤚"
+            label += thumbCount > 0 ? "👍\(thumbCount)" : ""
+            label += indexCount > 0 ? "👆\(indexCount)" : ""
+            MuLog.RunLog(label)
         }
     }
 
