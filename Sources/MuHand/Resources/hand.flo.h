@@ -1,20 +1,75 @@
-hand.{ left right }.{
-    joint {
-        thumb  {      knuc base inter tip }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-        index  { meta knuc base inter tip }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-        middle { meta knuc base inter tip }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-        ring   { meta knuc base inter tip }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-        little { meta knuc base inter tip }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-        wrist { pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-        forearm { pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01) on(0…1) }
-    }
-    touch {
+hand {
+    left {
         thumb {
-            index   { tip inter base }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01)  on(0…1) }
-            middle  { tip inter base }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01)  on(0…1) }
-            ring    { tip inter base }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01)  on(0…1) }
-            little  { tip inter base }.{ pos(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01)  on(0…1) }
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
         }
-        index @ joint // index finger of opposing hand touching joint to toggle on/off
+        index {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        middle {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        ring {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        little {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+    }
+    right {
+        thumb {
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        index {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        middle {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        ring {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
+        little {
+            meta (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            knuc (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            base (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            inter(x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+            tip  (x -0.3…0.3, y 0.8…1.2, z -0.5…0.01, time, phase, joint)
+        }
     }
 }
+

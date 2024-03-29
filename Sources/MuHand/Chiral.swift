@@ -4,6 +4,14 @@ import Foundation
 
 //  allow non-VisionOS to indicate Chirality handedness
 public enum Chiral: Int {
-    case left = 0
-    case right = 1
+    case either = 0
+    case left   = 1
+    case right  = 2
+    var name: String {
+        switch self {
+        case .either : "either"
+        case .left   : "left"
+        case .right  : "right"
+        }
+    }
 }

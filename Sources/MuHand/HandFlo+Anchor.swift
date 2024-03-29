@@ -8,39 +8,39 @@ import MuExtensions
 
 extension HandFlo {
 
-    func updateAnchor(_ anchor: HandAnchor) {
+    func updateAnchor(_ anchor: HandAnchor,
+                      _ otherHand: HandFlo) async {
 
-        guard let skeleton = anchor.handSkeleton else { return err("skeleton") }
+        guard let skeleton = anchor.handSkeleton else { return err("skeleton")}
 
         let transform = anchor.originFromAnchorTransform
+        for (jointEnum, jointFlo) in joints {
+            if jointFlo.on,
+               let arName = jointEnum.arJoint {
 
-        var newUpdate = false
+                let arJoint = skeleton.joint(arName)
+                let pos = matrix_multiply(transform, arJoint.anchorFromJointTransform).columns.3.xyz
 
-        for (joints, item) in joints {
-            if item.on,
-               let arName = joints.arJoint {
-
-                let joints = skeleton.joint(arName)
-                item.pos = matrix_multiply(transform, joints.anchorFromJointTransform).columns.3.xyz
-                newUpdate = true
+                await jointFlo.updatePos(pos)
             }
         }
-        if newUpdate {
-            time = Date().timeIntervalSince1970
-        }
-        MuLog.Log("HandFlo", interval: 2.0, terminator: " ") {
+        updateThumbIndex(otherHand)
+
+        MuLog.Log("HandFlo", interval: 2.0) {
             var msg = ""
-            for (joints, item) in self.joints {
-                if item.on {
-                    msg += joints.rawValue + item.pos.script(-2) + " "
+            for (jointEnum, jointFlo) in self.joints {
+                if jointFlo.on {
+                    msg += jointEnum.name + jointFlo.pos.script(-2) + " "
                 }
             }
             if !msg.isEmpty {
-                print("🖐️" + msg)
+                print("\n🖐️ " + msg + "\n")
             }
         }
-        func err(_ msg: String) { print("HandPos::update err: \(msg)") }
+
+        func err(_ msg: String) { print("⁉️ HandFlo::\(#function) err: \(msg)") }
     }
+    
 }
 
 #endif

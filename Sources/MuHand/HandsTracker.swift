@@ -4,24 +4,16 @@ import ARKit
 import MuFlo
 import MuExtensions
 
-public protocol HandTrackerDelegate {
-    func updateTouch()
-}
-
 #if os(visionOS)
 open class HandsTracker: ObservableObject, @unchecked Sendable {
 
     let session = ARKitSession()
     var handTracking = HandTrackingProvider()
     let handsFlo: LeftRight<HandFlo>
-    let delegate: HandTrackerDelegate
 
-    public init(_ delegate: HandTrackerDelegate,
-                _ handsFlo: LeftRight<HandFlo>) {
+    public init(_ handsFlo: LeftRight<HandFlo>) {
 
-        self.delegate = delegate
         self.handsFlo = handsFlo
-
     }
     public func startHands() async {
 
@@ -37,19 +29,16 @@ open class HandsTracker: ObservableObject, @unchecked Sendable {
 
     public func updateHands() async {
 
-        for await anchorUpdate in handTracking.anchorUpdates {
+        for await update in handTracking.anchorUpdates {
+            
+            if update.event == .updated,
+               update.anchor.isTracked {
 
-            if anchorUpdate.event == .updated,
-               anchorUpdate.anchor.isTracked {
-
-                let anchor = anchorUpdate.anchor
-
-                switch anchor.chirality {
-                case .left:  handsFlo.left.updateAnchor(anchor)
-                case .right: handsFlo.right.updateAnchor(anchor)
+                switch update.anchor.chirality {
+                case .left : await handsFlo.left.updateAnchor(update.anchor, handsFlo.right)
+                case .right: await handsFlo.right.updateAnchor(update.anchor, handsFlo.left)
                 }
             }
-            delegate.updateTouch()
         }
     }
     public func monitorSessionEvents() async {

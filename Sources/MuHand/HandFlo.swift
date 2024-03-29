@@ -4,12 +4,14 @@ import MuFlo
 import ARKit
 import MuExtensions
 
+public enum TouchJointStatus { case nothing, newJoint, oldJoint }
+
 public class HandFlo {
 
-    public var time = TimeInterval.zero
-    public var joints = [HandJoint: JointFlo]()
-    public var touchIndex = [HandJoint: JointFlo]()
-    public var touchThumb = [HandJoint: JointFlo]()
+    var chiral: Chiral?
+    public var joints     = [JointEnum: JointFlo]()
+    public var touchIndex = [JointEnum]()
+    public var touchThumb = [JointEnum]()
 
     // joints from arkit
     var thumbKnuc   = JointFlo()
@@ -38,48 +40,8 @@ public class HandFlo {
     var littleTip   = JointFlo()
     var wrist       = JointFlo()
     var forearm     = JointFlo()
-
-    // index finger touching joint of opposite hand
-    var indexThumbKnuc   = JointFlo()
-    var indexThumbBase   = JointFlo()
-    var indexThumbInter  = JointFlo()
-    var indexThumbTip    = JointFlo()
-    var indexIndexMeta   = JointFlo()
-    var indexIndexKnuc   = JointFlo()
-    var indexIndexBase   = JointFlo()
-    var indexIndexInter  = JointFlo()
-    var indexIndexTip    = JointFlo()
-    var indexMiddleMeta  = JointFlo()
-    var indexMiddleKnuc  = JointFlo()
-    var indexMiddleBase  = JointFlo()
-    var indexMiddleInter = JointFlo()
-    var indexMiddleTip   = JointFlo()
-    var indexRingMeta    = JointFlo()
-    var indexRingKnuc    = JointFlo()
-    var indexRingBase    = JointFlo()
-    var indexRingInter   = JointFlo()
-    var indexRingTip     = JointFlo()
-    var indexLittleMeta  = JointFlo()
-    var indexLittleKnuc  = JointFlo()
-    var indexLittleBase  = JointFlo()
-    var indexLittleInter = JointFlo()
-    var indexLittleTip   = JointFlo()
-    var indexWrist       = JointFlo()
-    var indexForearm     = JointFlo()
-
-    // thumb touch finger of same hand
-    var thumbIndexBase   = JointFlo()
-    var thumbIndexInter  = JointFlo()
-    var thumbIndexTip    = JointFlo()
-    var thumbMiddleBase  = JointFlo()
-    var thumbMiddleInter = JointFlo()
-    var thumbMiddleTip   = JointFlo()
-    var thumbRingBase    = JointFlo()
-    var thumbRingInter   = JointFlo()
-    var thumbRingTip     = JointFlo()
-    var thumbLittleBase  = JointFlo()
-    var thumbLittleInter = JointFlo()
-    var thumbLittleTip   = JointFlo()
+    // plus an extra for drawing on canvas
+    var canvas      = JointCanvasFlo()
 
     public init() {
 
@@ -112,62 +74,56 @@ public class HandFlo {
             .forearm     : forearm     ,
         ]
         touchIndex = [
-            .thumbKnuc   : indexThumbKnuc   ,
-            .thumbBase   : indexThumbBase   ,
-            .thumbInter  : indexThumbInter  ,
-            .thumbTip    : indexThumbTip    ,
-            .indexMeta   : indexIndexMeta   ,
-            .indexKnuc   : indexIndexKnuc   ,
-            .indexBase   : indexIndexBase   ,
-            .indexInter  : indexIndexInter  ,
-            .indexTip    : indexIndexTip    ,
-            .middleMeta  : indexMiddleMeta  ,
-            .middleKnuc  : indexMiddleKnuc  ,
-            .middleBase  : indexMiddleBase  ,
-            .middleInter : indexMiddleInter ,
-            .middleTip   : indexMiddleTip   ,
-            .ringMeta    : indexRingMeta    ,
-            .ringKnuc    : indexRingKnuc    ,
-            .ringBase    : indexRingBase    ,
-            .ringInter   : indexRingInter   ,
-            .ringTip     : indexRingTip     ,
-            .littleMeta  : indexLittleMeta  ,
-            .littleKnuc  : indexLittleKnuc  ,
-            .littleBase  : indexLittleBase  ,
-            .littleInter : indexLittleInter ,
-            .littleTip   : indexLittleTip   ,
-            .wrist       : indexWrist       ,
-            .forearm     : indexForearm     ,
+            .thumbKnuc   ,
+            .thumbBase   ,
+            .thumbInter  ,
+            .thumbTip    ,
+            .indexMeta   ,
+            .indexKnuc   ,
+            .indexBase   ,
+            .indexInter  ,
+            .indexTip    ,
+            .middleMeta  ,
+            .middleKnuc  ,
+            .middleBase  ,
+            .middleInter ,
+            .middleTip   ,
+            .ringMeta    ,
+            .ringKnuc    ,
+            .ringBase    ,
+            .ringInter   ,
+            .ringTip     ,
+            .littleMeta  ,
+            .littleKnuc  ,
+            .littleBase  ,
+            .littleInter ,
+            .littleTip   ,
+//            .wrist       ,
+//            .forearm     ,
         ]
+
         touchThumb = [
-            .indexBase   : thumbIndexBase   ,
-            .indexInter  : thumbIndexInter  ,
-            .indexTip    : thumbIndexTip    ,
-            .middleBase  : thumbMiddleBase  ,
-            .middleInter : thumbMiddleInter ,
-            .middleTip   : thumbMiddleTip   ,
-            .ringBase    : thumbRingBase    ,
-            .ringInter   : thumbRingInter   ,
-            .ringTip     : thumbRingTip     ,
-            .littleBase  : thumbLittleBase  ,
-            .littleInter : thumbLittleInter ,
-            .littleTip   : thumbLittleTip   ,
+            .indexTip  ,
+            .middleTip ,
+            .ringTip   ,
+            .littleTip ,
         ]
     }
-    public func parseHand(_ hand˚: Flo) {
+    public func parseHand(_ chiral: Chiral,
+                          _ hand˚: Flo) {
 
-        let handJoint = hand˚.bind("joint")
-        for (key, value) in self.joints {
-            value.parse(handJoint, key)
+        self.chiral = chiral
+        for (jointEnum, jointFlo) in self.joints {
+            jointFlo.parse(chiral, hand˚, jointEnum)
         }
-        let touchThumb = hand˚.bind("touch.thumb")
-        for (key, value) in self.touchThumb {
-            value.parse(touchThumb, key)
-        }
-        let touchIndex = hand˚.bind("touch.index")
-        for (key, value) in self.touchIndex {
-            value.parse(touchIndex, key)
-        }
+
+    }
+    public func parseCanvas(_ touchCanvas: TouchCanvasDelegate,
+                            _ chiral: Chiral,
+                            _ root˚: Flo) {
+
+        let parent˚ = root˚.bind("sky")
+        canvas.parseCanvas(touchCanvas, chiral, parent˚)
     }
 
     public func trackAllJoints(on: Bool) {
@@ -176,10 +132,24 @@ public class HandFlo {
         }
     }
 
-    public func trackJoints(_ trackJoints: [HandJoint], on: Bool) {
+    public func trackJoints(_ trackJoints: [JointEnum], on: Bool) {
         for trackJoint in trackJoints {
             if let jointItem = joints[trackJoint] {
                 jointItem.on = on
+            }
+        }
+    }
+
+    public func updateThumbIndex(_ otherHand: HandFlo) {
+
+        for jointEnum in touchThumb {
+            if let jointFlo = joints[jointEnum] {
+                jointFlo.updateThumbTip(thumbTip)
+            }
+        }
+        for jointEnum in otherHand.touchIndex {
+            if let jointFlo = otherHand.joints[jointEnum] {
+                jointFlo.updateIndexTip(indexTip)
             }
         }
     }
