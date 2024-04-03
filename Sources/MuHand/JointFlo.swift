@@ -47,8 +47,8 @@ public class JointFlo {
         flo˚ = hand˚.bind(joint.name) { val,_ in
 
             self.pos = val.xyz
-            guard let time  = val.double(named: "time") else { return err("time") }
-            guard let phase = val.phase(named: "phase") else { return err("phase") }
+            guard let time  = val.component(named: "time") as? Double else { return err("time") }
+            guard let phase = val.component(named: "phase") as? UITouch.Phase else { return err("phase") }
 
             self.time = time
             self.phase = phase
@@ -86,7 +86,7 @@ public class JointFlo {
             let mine = path + pos.script(-2)
             let index = "indexTip\(indexTip.pos.script(-2))"
             let label = "\(prefix)\(mine) ∆ \(index) => \(d.digits(3)) "
-            MuLog.RunLog(label)
+            MuLog.RunLog(label, interval: 0) {}
         }
     }
     /// thumb finger tip as continuos controller or brush
@@ -113,7 +113,7 @@ public class JointFlo {
             let mine = path + self.pos.script(-2)
             let thumb = "thumbTip\(thumbTip.pos.script(-2))"
             let label = "\(prefix) \(mine) ∆ \(thumb) => \(d.digits(3)) "
-            MuLog.RunLog(label)
+            MuLog.RunLog(label, interval: 0) { }
         }
     }
 
@@ -127,19 +127,19 @@ public class JointFlo {
                    _ options: FloSetOps = .activate) {
         self.phase = phase
         self.time = time
-        let parms: [(String,Double)] = [
+        let nameDoubles: [(String,Double)] = [
             ("x"    , Double(pos.x)),
             ("y"    , Double(pos.y)),
             ("z"    , Double(pos.z)),
             ("time" , Double(time )),
             ("phase", Double(phase.rawValue)),
             ("joint", Double(joint.rawValue))]
-
-        flo˚?.setDoubles(parms)
-        if options == .activate {
-            flo˚?.activate(Visitor(0))
+        if let flo˚ {
+            flo˚.setDoubles(nameDoubles)
+            if options == .activate {
+                flo˚.activate(Visitor(0))
+            }
         }
-
     }
 }
 

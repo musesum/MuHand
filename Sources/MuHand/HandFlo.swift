@@ -157,7 +157,7 @@ public class HandFlo {
             var label = chiral == .left ? "✋" : "🤚"
             label += thumbCount > 0 ? "👍\(thumbCount)" : ""
             label += indexCount > 0 ? "👆\(indexCount)" : ""
-            MuLog.RunLog(label)
+            MuLog.RunLog(label, interval: 0) {}
         }
     }
 
