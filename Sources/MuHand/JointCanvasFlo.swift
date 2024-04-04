@@ -19,13 +19,12 @@ public class JointCanvasFlo: JointFlo {
 
         flo˚ = parent˚.bind(joint.name) { val,_ in
             self.pos = val.xyz
-            guard let time  = val.component(named: "time" ) as? Double else { return err("time") }
-            guard let joint = val.component(named: "joint") as? Double else { return err("joint") }
-            guard let phase = val.component(named: "phase") as?  UITouch.Phase else { return err("phase") }
-
-            self.time = time
+            self.time  = val.component(named: "time" ) as? Double ?? 0
+            
+            let joint = val.component(named: "joint") as? Double ?? 0
             self.joint = JointEnum(rawValue: Int(joint))
-            self.phase = phase
+
+            self.phase = val.component(named: "phase") as? UITouch.Phase ?? .began
 
             switch self.phase {
             case .began: self.touchCanvas?.handBegin(self)
