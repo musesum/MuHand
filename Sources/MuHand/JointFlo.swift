@@ -2,9 +2,8 @@
 
 import Foundation
 import UIKit
-import MuFlo
-import MuExtensions
 import simd
+import MuFlo
 
 public protocol TouchCanvasDelegate {
     func handBegin(_ jointFlo: JointFlo)

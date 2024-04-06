@@ -1,9 +1,8 @@
 // created by musesum on 3/19/24
 
 import UIKit
-import MuFlo
-import MuExtensions
 import simd
+import MuFlo
 
 public class JointCanvasFlo: JointFlo {
 

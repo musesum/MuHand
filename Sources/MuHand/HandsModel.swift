@@ -2,7 +2,6 @@
 
 import ARKit
 import MuFlo
-import MuExtensions
 
 open class HandsModel {
 

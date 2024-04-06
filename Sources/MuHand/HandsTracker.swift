@@ -2,7 +2,6 @@
 
 import ARKit
 import MuFlo
-import MuExtensions
 
 #if os(visionOS)
 open class HandsTracker: ObservableObject, @unchecked Sendable {

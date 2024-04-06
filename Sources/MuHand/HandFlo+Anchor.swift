@@ -2,9 +2,8 @@
 
 #if os(visionOS)
 
-import MuFlo
 import ARKit
-import MuExtensions
+import MuFlo
 
 extension HandFlo {
 
